@@ -5,6 +5,7 @@ const cors = require('cors')
 
 app.use(express.json())
 app.use(cors())
+app.use(express.static('build'))
 
 // create custome message in the middleweare s
 morgan.token('ob', function (req, res) { 
@@ -110,4 +111,4 @@ app.delete('/api/persons/:id', (req, res) => {
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
-})
+}) 
