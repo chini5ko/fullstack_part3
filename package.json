@@ -1,0 +1,27 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \\\"Error: no test specified\\\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chini5ko/fullstack_part3.git"
+  },
+  "author": "Hector Liang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chini5ko/fullstack_part3/issues"
+  },
+  "homepage": "https://github.com/chini5ko/fullstack_part3#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
