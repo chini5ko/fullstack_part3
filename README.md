@@ -1,5 +1,40 @@
+# 3.8*: Phonebook backend step8
+Configure morgan so that it also shows the data sent in HTTP POST requests:
+
+```js
+const express = require('express')
+const app = express()
+var morgan = require('morgan')
+
+app.use(express.json())
+
+// create custome message in the middleweare s
+morgan.token('ob', function (req, res) { 
+    console.log("ob", req.body)
+    return `${JSON.stringify(req.body)}` })
+
+app.use(morgan(':method :url :status :response-time :req[header] :ob'))
+```
+
 # fullstack_part3
 As recommended by this part, I am using a new repo for part3
+
+3.7: Phonebook backend step7
+Add the morgan middleware to your application for logging. Configure it to log messages to your console based on the tiny configuration.
+
+The documentation for Morgan is not the best, and you may have to spend some time figuring out how to configure it correctly. However, most documentation in the world falls under the same category, so it's good to learn to decipher and interpret cryptic documentation in any case.
+
+Morgan is installed just like all other libraries with the npm install command. Taking morgan into use happens the same way as configuring any other middleware by using the app.use command.
+
+```js
+const express = require('express')
+const app = express()
+var morgan = require('morgan')
+
+app.use(express.json())
+app.use(morgan('tiny'));
+
+```
 
 # 3.6: Phonebook backend step6
 Implement error handling for creating new entries. The request is not allowed to succeed, if:

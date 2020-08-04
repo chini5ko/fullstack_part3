@@ -1,6 +1,15 @@
 const express = require('express')
 const app = express()
+var morgan = require('morgan')
+
 app.use(express.json())
+
+// create custome message in the middleweare s
+morgan.token('ob', function (req, res) { 
+    console.log("ob", req.body)
+    return `${JSON.stringify(req.body)}` })
+
+app.use(morgan(':method :url :status :response-time :req[header] :ob'))
 
 
 let persons = [
@@ -36,7 +45,7 @@ const generateId = () =>{
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
-    console.log(body)
+    // console.log(body)
   
     if (!body.name) {
       return response.status(400).json({ 
