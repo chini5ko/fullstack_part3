@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
 var morgan = require('morgan')
+const cors = require('cors')
 
 app.use(express.json())
+app.use(cors())
 
 // create custome message in the middleweare s
 morgan.token('ob', function (req, res) { 

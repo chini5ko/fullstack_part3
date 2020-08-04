@@ -1,3 +1,14 @@
+# 3.10 phonebook backend step10
+
+# 3.9 phonebook backend step9
+
+```js
+const baseUrl = 'http://localhost:3001/api/persons'
+const cors = require('cors')
+app.use(cors())
+
+```
+
 # 3.8*: Phonebook backend step8
 Configure morgan so that it also shows the data sent in HTTP POST requests:
 
