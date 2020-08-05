@@ -1,4 +1,22 @@
+# 3.11 phonebook full stack
+
+- Also make sure that the frontend still works locally.
+In the Phonebook's ./service/persona files: 
+```js
+const baseUrl = 'http://localhost:3001/api/persons'
+```
+
+When deploying to Heroku, I need to use a relative path 
+
+```js
+const baseUrl = '/api/persons'
+```
+
+
+
 # 3.10 phonebook backend step10
+Deploy the backend to the internet, for example to Heroku.
+URL: [https://stormy-plateau-08730.herokuapp.com/](https://stormy-plateau-08730.herokuapp.com/)
 
 # 3.9 phonebook backend step9
 
