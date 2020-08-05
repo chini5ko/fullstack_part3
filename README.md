@@ -12,6 +12,20 @@ When deploying to Heroku, I need to use a relative path
 const baseUrl = '/api/persons'
 ```
 
+Or Just use  a proxy in your package.json file, under your react project 
+```js
+{
+  "dependencies": {
+    // ...
+  },
+  "scripts": {
+    // ...
+  },
+  "proxy": "http://localhost:3001"
+}
+```
+
+
 
 
 # 3.10 phonebook backend step10
