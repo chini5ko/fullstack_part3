@@ -1,3 +1,147 @@
+# 3.14: Phonebook database, step2
+Change the backend so that new numbers are saved to the database. Verify that your frontend still works after the changes.
+
+At this point, you can choose to simply allow users to create all phonebook entries. At this stage, the phonebook can have multiple entries for a person with the same name.
+```js
+
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    // console.log(body)
+
+    if (!body.name) {
+        return response.status(400).json({
+            error: 'name missing'
+        })
+    }
+
+    if (!body.number) {
+        return response.status(400).json({
+            error: 'number missing'
+        })
+    }
+
+    ///
+    Person.find({}).then(persons => {
+        console.log('persons: ', persons)
+
+        if (persons.some(person => person.name === body.name)) {
+            console.log("name must be unique")
+            return response.status(400).json({
+                error: 'name must be unique'
+            })
+        }
+
+         let person = new Person(  {
+            name: body.name,
+            number: body.number
+        })
+             // id: generateId(),
+    
+        // save in mongod DV
+        person.save().then(savedPerson => {
+            console.log('savedPerson', savedPerson)
+            response.json(savedPerson)
+        })
+    })
+})
+```
+# 3.13: Phonebook database, step1
+Change the fetching of all phonebook entries so that the data is fetched from the database.
+
+Verify that the frontend works after the changes have been made.
+
+```js
+const Person = require('./models/person')
+
+app.get('/api/persons', (req, res) => {
+    Person.find({}).then(result => {
+        res.json(result)
+    })
+})
+```
+
+```js
+//person.js
+const mongoose = require('mongoose')
+const url = process.env.MONGODB_URI
+console.log('connecting to', url)
+
+// url  mongodb+srv://fullstack:<password>@cluster0.eusd4.mongodb.net/<dbname>?retryWrites=true&w=majority
+
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(result => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String
+})
+
+
+module.exports = mongoose.model('Person', personSchema)
+
+```
+# 3.12: Command-line database
+Create a cloud-based MongoDB database for the phonebook application with MongoDB Atlas.
+
+Create a mongo.js file in the project directory, that can be used for adding entries to the phonebook, and for listing all of the existing entries in the phonebook.
+
+```
+node mongo.js yourpassword Anna 040-1234556
+```
+
+```js
+const mongoose = require('mongoose')
+const password = process.argv[2]
+const name = process.argv[3]
+const number = process.argv[4]
+
+if (process.argv.length < 3) {
+  console.log('Please provide the password as an argument: node mongo.js <password>')
+  process.exit(1)
+}
+
+const url =
+  `mongodb+srv://fullstack:${password}@cluster0.eusd4.mongodb.net/persons-app?retryWrites=true&w=majority`
+
+//   mongodb+srv://fullstack:<password>@cluster0.eusd4.mongodb.net/<dbname>?retryWrites=true&w=majority
+
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String
+})
+
+const Person = mongoose.model('Person', personSchema)
+
+if (process.argv.length == 3 ){
+  Person.find({}).then(result => {
+    result.forEach(person => {
+      console.log(person)
+    }).
+    mongoose.connection.close()
+  })
+}
+
+if (process.argv.length > 3 ){
+  const person = new Person({
+    name: name,
+    number: number
+  })
+  
+  person.save().then(result => {
+    console.log(`added ${name} number ${number} to phonebook`)
+    mongoose.connection.close()
+  })
+}
+```
+
 # 3.11 phonebook full stack
 
 - Also make sure that the frontend still works locally.

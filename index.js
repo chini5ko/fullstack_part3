@@ -1,7 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 var morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
+
 
 app.use(express.json())
 app.use(cors())
@@ -9,81 +12,66 @@ app.use(express.static('build'))
 //
 
 // create custome message in the middleweare s
-morgan.token('ob', function (req, res) { 
-    console.log("ob", req.body)
-    return `${JSON.stringify(req.body)}` })
+morgan.token('ob', function (req, res) {
+    return `${JSON.stringify(req.body)}`
+})
 
 app.use(morgan(':method :url :status :response-time :req[header] :ob'))
 
 
-let persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "123",
-        "id": 1
-    },
-    {
-        "name": "Dan Abramov",
-        "number": "12-43-234345",
-        "id": 2
-    },
-    {
-        "name": "Nikko Ce",
-        "number": "123-12-1",
-        "id": 3
-    },
-    {
-        "name": "Nldskjl Ce",
-        "number": "1232-21-1",
-        "id": 4
-    }
-]
-
-const generateId = () =>{
-    const maxID = persons.length > 0
-    ? Math.max( ...persons.map(n => n.id))
-    : 0
-    return maxID +1
-}
+// const generateId = () => {
+//     const maxID = persons.length > 0
+//         ? Math.max(...persons.map(n => n.id))
+//         : 0
+//     return maxID + 1
+// }
 
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
     // console.log(body)
-  
+
     if (!body.name) {
-      return response.status(400).json({ 
-        error: 'name missing' 
-      })
+        return response.status(400).json({
+            error: 'name missing'
+        })
     }
 
     if (!body.number) {
-        return response.status(400).json({ 
-          error: 'number missing' 
+        return response.status(400).json({
+            error: 'number missing'
         })
-      }
-
-    if(persons.some(person => person.name === body.name)){
-        return response.status(400).json({ 
-            error: 'name must be unique' 
-          })
-
     }
-  
-    let person = {
-      name: body.name,
-      number: body.number,
-      id: generateId(),
-    }
-  
-    persons = persons.concat(person)
-  
-    response.json(person)
-  })
 
+    ///
+    Person.find({}).then(persons => {
+        console.log('persons: ', persons)
+
+        if (persons.some(person => person.name === body.name)) {
+            console.log("name must be unique")
+            return response.status(400).json({
+                error: 'name must be unique'
+            })
+        }
+
+         let person = new Person(  {
+            name: body.name,
+            number: body.number
+        })
+             // id: generateId(),
+    
+        // save in mongod DV
+        person.save().then(savedPerson => {
+            console.log('savedPerson', savedPerson)
+            response.json(savedPerson)
+        })
+    })
+})
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person.find({}).then(result => {
+        res.json(result)
+    })
 })
 
 app.get('/api/info', (req, res) => {
