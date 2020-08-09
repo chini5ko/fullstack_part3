@@ -20,7 +20,8 @@ app.use(express.static('build'))
 //   app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
+    // console.error(error.message)
+    console.log('errorHandler called')
   
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
@@ -105,16 +106,12 @@ app.get('/api/info', (req, res) => {
     res.send(`<p> Phonebook has info for ${persons.length} people </p> <p> ${utcDate1.toUTCString()}</p>`)
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     const id = req.params.id
-    const person = persons.find(person => { return person.id == id })
-
-    if (person) {
+    Person.findById(req.params.id).then(person =>{
         res.json(person)
-    }
-    else {
-        res.status(404).end()
-    }
+    })
+    .catch(error => res.status(404).end())
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {

@@ -1,3 +1,18 @@
+
+# 3.18*: Phonebook database step6
+Also update the handling of the api/persons/:id and info routes to use the database, and verify that they work directly with the browser, Postman, or VS Code REST client.
+
+
+```js
+app.get('/api/persons/:id', (req, res, next) => {
+    const id = req.params.id
+    Person.findById(req.params.id).then(person =>{
+        res.json(person)
+    })
+    .catch(error => res.status(404).end())
+})
+```
+
 # 3.17*: Phonebook database, step5
 If the user tries to create a new phonebook entry for a person whose name is already in the phonebook, the frontend will try to update the phone number of the existing entry by making an HTTP PUT request to the entry's unique URL.
 
