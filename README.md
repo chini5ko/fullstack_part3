@@ -1,3 +1,50 @@
+3.17*: Phonebook database, step5
+If the user tries to create a new phonebook entry for a person whose name is already in the phonebook, the frontend will try to update the phone number of the existing entry by making an HTTP PUT request to the entry's unique URL.
+
+Modify the backend to support this request.
+
+Verify that the frontend works after making your changes.
+
+# 3.16: Phonebook database, step4
+Move the error handling of the application to a new error handler middleware.
+
+```js
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+  
+    next(error)
+  }
+  
+  app.use(errorHandler)
+  ```
+
+# 3.15: Phonebook database, step3
+Change the backend so that deleting phonebook entries is reflected in the database.
+
+Verify that the frontend still works after making the changes.
+
+```js
+const deletePerson = (personToBeDeleted) => {
+
+    console.log('delete: ',personToBeDeleted._id )
+    if(window.confirm(`Delete ${personToBeDeleted._id}`)){
+      personeService
+      .deleteObjectById(personToBeDeleted._id)
+      .then(
+        setPersons(persons.filter((person) => person['_id'] !== personToBeDeleted['_id']))
+      )
+      .then(
+        setFilterText('')
+      )
+    }
+  }
+```
+
 # 3.14: Phonebook database, step2
 Change the backend so that new numbers are saved to the database. Verify that your frontend still works after the changes.
 
