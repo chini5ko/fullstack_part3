@@ -1,9 +1,24 @@
-3.17*: Phonebook database, step5
+# 3.17*: Phonebook database, step5
 If the user tries to create a new phonebook entry for a person whose name is already in the phonebook, the frontend will try to update the phone number of the existing entry by making an HTTP PUT request to the entry's unique URL.
 
 Modify the backend to support this request.
 
 Verify that the frontend works after making your changes.
+
+```js
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+    const person = {
+      number: body.number
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, { new: true})
+      .then(updatedPerson => {
+        response.json(updatedPerson)
+      })
+      .catch(error => next(error))
+  })
+```
 
 # 3.16: Phonebook database, step4
 Move the error handling of the application to a new error handler middleware.
