@@ -1,7 +1,50 @@
 
-# 3.18*: Phonebook database step6
-Also update the handling of the api/persons/:id and info routes to use the database, and verify that they work directly with the browser, Postman, or VS Code REST client.
+# 3.20*: Phonebook database, step8
+Expand the validation so that the name stored in the database has to be at least three characters long, and the phone number must have at least 8 digits.
 
+```js
+personeService
+          .create(personObj)
+          .then(personObject => {
+            setPersons(persons.concat(personObject))
+
+            setNotificationMessage(`Added ${personObject.name}`)
+            setNotificationType('sucess');
+
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 2000);
+
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            setNotificationMessage(`${error.response.data.error}`)
+            setNotificationType('error');
+          })
+```
+
+# 3.19: Phonebook database, step7
+Add validation to your phonebook application, that will make sure that a newly added person has a unique name. Our current frontend won't allow users to try and create duplicates, but we can attempt to create them directly with Postman or the VS Code REST client.
+
+```js
+// npm install --save mongoose-unique-validator
+var uniqueValidator = require('mongoose-unique-validator');
+
+const personSchema = new mongoose.Schema({
+  name: {
+    type:String, 
+    required: true
+  },
+  number: {
+    type:Number, 
+    required: true
+  }
+})
+
+personSchema.plugin(uniqueValidator);
+
+```
 
 ```js
 app.get('/api/persons/:id', (req, res, next) => {
@@ -11,6 +54,25 @@ app.get('/api/persons/:id', (req, res, next) => {
     })
     .catch(error => res.status(404).end())
 })
+```
+
+# 3.18*: Phonebook database step6
+Also update the handling of the api/persons/:id and info routes to use the database, and verify that they work directly with the browser, Postman, or VS Code REST client.
+```js
+
+app.get('/api/persons/:id', (req, res, next) => {
+    const id = req.params.id
+    Person.findById(req.params.id).then(person =>{
+        if(person){
+            res.json(person)
+        }
+        else{
+            response.status(404).end()
+        }
+    })
+    .catch(error =>next(error))
+})
+
 ```
 
 # 3.17*: Phonebook database, step5
