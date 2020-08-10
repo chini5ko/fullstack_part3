@@ -1,3 +1,80 @@
+# 3.22: Lint configuration
+Add ESlint to your application and fix all the warnings.
+- [AirBnbEslintConfit](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb)
+```js
+npm install eslint --save-dev
+```
+
+```js
+node_modules/.bin/eslint --init
+```
+
+## files:
+- .eslintrc.js
+```js
+module.exports = {
+  'env': {
+    'commonjs': true,
+    'es6': true,
+    'node': true
+  },
+  'extends': 'eslint:recommended',
+  'globals': {
+    'Atomics': 'readonly',
+    'SharedArrayBuffer': 'readonly'
+  },
+  'parserOptions': {
+    'ecmaVersion': 2018
+  },
+  'rules': {
+    'indent': [
+      'error',
+      2
+    ],
+    'linebreak-style': [
+      'error',
+      'unix'
+    ],
+    'quotes': [
+      'error',
+      'single'
+    ],
+    'semi': [
+      'error',
+      'never'
+    ],
+    'eqeqeq': 'error',
+    'no-trailing-spaces': 'error',
+    'object-curly-spacing': [
+      'error', 'always'
+    ],
+    'arrow-spacing': [
+      'error', { 'before': true, 'after': true }
+    ],
+    'no-console': 0
+  }
+}
+
+```
+- .eslintignore
+```
+build
+```
+
+- package.json
+```js
+"scripts": {
+    "start": "node index.js",
+   // ...
+    "lint": "eslint ."
+  },
+```
+
+# 3.21 Deploying the database backend to production
+Env variable
+```
+heroku config:set MONGODB_URI=mongodb+srv://fullstack:secretpasswordhere@cluster0-ostce.mongodb.net/note-app?retryWrites=true
+```
 
 # 3.20*: Phonebook database, step8
 Expand the validation so that the name stored in the database has to be at least three characters long, and the phone number must have at least 8 digits.
